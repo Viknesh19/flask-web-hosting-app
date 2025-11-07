@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='user_index.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
+    <script class="u-script" type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}" defer=""></script>
+    <script src="https://kit.fontawesome.com/a81368914c.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+    <title>Register</title>
+</head>
+<body>
+    
+    <header class="header">
+        <a href = "/" class = "brand-name">Our <span>Shop</span></a>
+        <input class="menu-btn" type="checkbox" id="menu-btn" />
+        <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+        <ul class="menu">
+            <li><a href="/"><span class = "head-icon"><i class = "fas fa-home"><h3>Home</h3></a></i></span></li>
+            {% if role=='Account' %}
+                <li><a href="/login"><span class = "head-icon"><i class = "fas fa-user-circle"><h3>{{user}}</h3></i></span></a></li>
+            {% elif role=='user' %}
+                <li><a href="/user_update"><span class = "head-icon"><i class = "fas fa-user-circle"><h3>{{user}}</h3></i></span></a></li>
+            {% else %}
+                <li><a href="/seller_update"><span class = "head-icon"><i class = "fas fa-user-circle"><h3>{{user}}</h3></i></span></a></li>
+            {% endif %}
+            {% if role=='Account' %}
+            {% else %}
+                <li><a href="/cart"><span class = "head-icon"><i class = "fas fa-shopping-bag"><h3>Cart</h3></i></span></a></li>
+            {% endif %}
+        </ul> 
+    </header>
+    
+
+    <div class="a">
+    <img class="wave" src="{{ url_for('static',filename='image/wave.png') }}" alt="">
+    <div class="container">
+        <div class="img"><img src="{{ url_for('static',filename='image/bg.svg') }}" alt=""></div>
+        <div class="login-content">
+            <form action="/register_seller" method="POST">
+                <img src="{{ url_for('static',filename='image/avatar.svg') }}">
+				<h2 class="title">Hello New Seller</h2>
+
+                <div class="input-div one">
+                    <div class="i"><i class="fas fa-user"></i></div>
+                    <div class="div">
+                        <input type="id" class="input" name="sellername" placeholder="SellerID" required="required"/>
+                    </div>
+                </div>
+
+                <div class="input-div pass">
+                    <div class="i"><i class="fas fa-lock"></i></div>
+            
+                    <div class="div">
+                        <input type="password" name="password" placeholder="Password" required="required" />
+                    </div>
+                </div>
+
+                <div class="input-div pass">
+                    <div class="i"><i class="fas fa-user"></i></div>
+            
+                    <div class="div">
+                        <input type="text" placeholder="CompanyName" name="company_name" required="required" />
+                    </div>
+                </div>
+                
+                <div class="input-div pass">
+                    <div class="i"><i class="fas fa-phone"></i></div>
+            
+                    <div class="div">
+                        <input type="text" name="phone" placeholder="Phone" required="required" />
+                    </div>
+                </div>
+                <input type="hidden" value="" name="recaptchaResponse">
+                <input type="hidden" name="formServices" value="5962470853801cd5a9262fcd1cab2688">        
+                <a href="/login">Already have an account? Login</a>
+                <button type="submit" class="btn ">Register</button>
+            </form>
+        </div>
+        {% if error_message %}
+            <p>{{error_message}}</p>
+        {% endif %}
+    </div>
+    <script src="{{ url_for('static', filename='login.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='main.js') }}"></script>
+    </div>
+    
+</body>
+</html>

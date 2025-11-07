@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='cart.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='user_index.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
+    <script class="u-script" type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}" defer=""></script>
+    <title>Cart</title>
+</head>
+<body>
+    
+    <header class="header">
+        <a href = "/" class = "brand-name">Our <span>Shop</span></a>
+        <input class="menu-btn" type="checkbox" id="menu-btn" />
+        <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+        <ul class="menu">
+            <li><a href="/"><span class = "head-icon"><i class = "fas fa-home"><h3>Home</h3></a></i></span></li>
+            {% if role=='Account' %}
+                <li><a href="/login"><span class = "head-icon"><i class = "fas fa-user-circle"><h3>{{user}}</h3></i></span></a></li>
+            {% elif role=='user' %}
+                <li><a href="/user_update"><span class = "head-icon"><i class = "fas fa-user-circle"><h3>{{user}}</h3></i></span></a></li>
+            {% else %}
+                <li><a href="/seller_update"><span class = "head-icon"><i class = "fas fa-user-circle"><h3>{{user}}</h3></i></span></a></li>
+            {% endif %}
+            <li><a href="/cart"><span class = "head-icon"><i class = "fas fa-shopping-bag"><h3>Cart</h3></i></span></a></li>
+            <li><a href="/logout"><span class = "head-icon"><i class = "fas fa-sign-out-alt"><h3>LogOut</h3></i></span></a></li>
+        </ul> 
+    </header>
+    
+
+  <div class="cart content-wrapper">
+    <h1>Shopping Cart</h1>
+    <table>
+      <thead>
+        <tr>
+          <td colspan="2">Product</td>
+          <td>Price</td>
+          <td>Quantity</td>
+          <td>Total</td>
+        </tr>
+      </thead>
+      <tbody>
+      {% if cart_items|length == 0 %}
+        <tr>
+          <td colspan="5" style="text-align:center;">You have no products added to your Shopping Cart</td>
+        </tr>
+      {% else %}
+        {% for item in cart_items %}
+        {% set prod = item.product %}
+        <tr>
+          <td class="img">
+            <a href="">
+              <img src="{{ prod.Picture }}" width="150px"  alt="{{ prod.Name }}">
+            </a>
+          </td>
+          <td>
+            <a href="">{{ prod.Name }}<br>Stock: {{ prod.Stock }}</a>
+            <br>
+            <a href="/cart/remove/{{ item.ProductID }}" class="remove">Remove</a>
+          </td>
+          <td class="price">{{ "RM %.2f"|format(prod.Price) }}</td>
+          <td class="quantity">
+            <input type="number" name="{{ item.ProductID }}" value="{{ item.Quantity }}" min="1" max="{{ prod.Stock }}" placeholder="Quantity" required onchange="updateQuantity(this)">
+          </td>
+          <td class="price">{{ "RM %.2f"|format((prod.Price) *  (item.Quantity)) }}</td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+      </tbody>
+    </table>
+    <div class="buttons">
+      <form action="/checkout" method="POST">
+        <input type="submit" value="Checkout" name="placeorder">
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function updateQuantity(input) {
+      var productId = input.name;
+      var quantity = input.value;
+      var currentQuantity = parseInt(input.getAttribute('value'));
+      if (quantity > currentQuantity) {
+        fetch(`/cart/plus/${productId}`)
+          .then(response => {
+            if (response.ok) {
+              // Update the total price in the table
+              var priceElement = input.parentNode.previousElementSibling;
+              var totalPriceElement = input.parentNode.nextElementSibling;
+              var price = parseFloat(priceElement.innerHTML.replace(/[^0-9.]/g, ''));
+              totalPriceElement.innerHTML = `RM ${(price * quantity).toFixed(2)}`;
+            } else {
+              throw new Error('Failed to update quantity.');
+            }
+          })
+          .catch(error => {
+            console.error(error);
+            alert('Failed to update quantity. Please try again.');
+          });
+      } else if (quantity < currentQuantity) {
+        fetch(`/cart/minus/${productId}`)
+          .then(response => {
+            if (response.ok) {
+              // Update the total price in the table
+              var priceElement = input.parentNode.previousElementSibling;
+              var totalPriceElement = input.parentNode.nextElementSibling;
+              var price = parseFloat(priceElement.innerHTML.replace(/[^0-9.]/g, ''));
+              totalPriceElement.innerHTML = `RM ${(price * quantity).toFixed(2)}`;
+            } else {
+              throw new Error('Failed to update quantity. Please try again.');
+            }
+          })
+          .catch(error => {
+            console.error(error);
+            alert('Failed to update quantity. Please try again.');
+          });
+      }
+    }
+     
+  </script>
+
+  <footer class = "footer container">
+    <div class = "footer-item">
+      <h2 class = "brand-name">
+        Our <span>Shop</span>
+      </h2>
+      <p>social media accounts</p>
+      <ul class = "footer-icons">
+        <li>
+          <a href = "#"><i class = "fab fa-facebook-f"></i></a>
+        </li>
+        <li>
+          <a href = "#"><i class = "fab fa-twitter"></i></a>
+        </li>
+        <li>
+          <a href = "#"><i class = "fab fa-instagram"></i></a>
+        </li>
+        <li>
+          <a href = "#"><i class = "fab fa-linkedin"></i></a>
+        </li>
+        <li>
+          <a href = "#"><i class = "fab fa-google-plus-g"></i></a>
+        </li>
+      </ul>
+    </div>
+
+    <div class = "footer-item">
+      <h3>links</h3>
+      <ul>
+        <li><a href = "/">home</a></li>
+        <li><a href = "#">download</a></li>
+        <li><a href = "/crat">Cart</a></li>
+        <li><a href = "#">about</a></li>
+      </ul>
+    </div>
+
+    <div class = "footer-item">
+      <h3>products</h3>
+      <ul>
+        <li><a href = "#">dog</a></li>
+        <li><a href = "#">nature</a></li>
+        <li><a href = "#">gem</a></li>
+        <li><a href = "#">gadget</a></li>
+      </ul>
+    </div>
+
+    <div class = "footer-item">
+      <h3>support</h3>
+      <ul>
+        <li><a href = "#">FAQ</a></li>
+        <li><a href = "#">how it works</a></li>
+        <li><a href = "#">features</a></li>
+        <li><a href = "#">contact</a></li>
+      </ul>
+    </div>
+</footer>
+    
+</body>
+</html>

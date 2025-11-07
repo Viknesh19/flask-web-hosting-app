@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css?family=Josefin+Sans:300,400,700&display=swap');
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none;
+  font-family: sans-serif;
+}
+
+body{
+      height: 100vh;
+      background: #e1edf9;
+}
+
+.wrapper{
+  max-width: 450px;
+  width: 100%;
+  margin: 110px auto 10px;
+  padding: 10px;
+
+}
+
+.wrapper .form_container{
+  background: #fff;
+  padding: 30px;
+  box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+}
+.heading{
+  background: #015a80;
+  margin: -30px;
+  text-align: center;
+  color: white;
+  font-size: 19px;
+  margin-bottom: 35px;
+  padding: 10px;
+  
+  
+}
+.wrapper .form_container .form_item{
+  margin-bottom: 25px;
+}
+
+
+.wrapper .form_container .form_item label{
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form_item input[type="text"],
+.form_item input[type="number"],
+.form_item input[type="url"],
+.form_item textarea{
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #dadce0;
+  border-radius: 3px;
+}
+
+.form_item input[type="text"]:focus,
+.form_item input[type="url"]:focus,
+.form_item textarea:focus,
+.form_item input[type="number"]:focus{
+  border-color: #6271f0;
+}
+
+
+.btn button[type="submit"]{
+  background: #1598d4;
+  border: 1px solid #1598d4;
+  padding: 10px;
+  width: 100%;
+  font-size: 16px;
+  letter-spacing: 1px;
+  border-radius: 3px;
+  cursor: pointer;
+  color: #fff;
+}
